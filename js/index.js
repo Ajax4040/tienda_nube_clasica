@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
         const productoHTML = `
         <div class="product" id="${codigo}">
-            <img src="images/prueba.png" alt="${descripcion}" class="product__img lazyload">
+            <img src="${imagen}" alt="${descripcion}" class="product__img lazyload">
             <p class="product__description">${descripcion}</p>
             <p class="product__code">Código: ${codigo}</p>
             <p class="product__price">$${precio}</p>
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function marcarProductosAgregados() {
-        console.log("Marcando productos agregados...");
+        console.log("Marcando productos agregados en el carrito...");
         let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
         carrito.forEach(item => {
             let productoId = item.id; // Obtener el ID del producto

@@ -93,7 +93,7 @@ body {
     display: flex;
     justify-content: flex-end; /* Distribuye el espacio entre los elementos hijos */
     align-items: center;
-    width: 50%; /* Ocupa el 50% del ancho de .header__nav2 */
+    width: 60%; /* Ocupa el 60% del ancho de .header__nav2 */
     height: 80%; /* Un poco más pequeño que el alto de .header__nav2 */
 }
 
@@ -101,7 +101,7 @@ body {
     display: flex;
     justify-content: flex-start; /* Distribuye el espacio entre los elementos hijos */
     align-items: center;
-    width: 50%; /* Ocupa el 50% del ancho de .header__nav2 */
+    width: 40%; /* Ocupa el 40% del ancho de .header__nav2 */
     height: 80%; /* Un poco más pequeño que el alto de .header__nav2 */
 }
 
