@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>La lavanderia</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Rajdhani&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.min.css" rel="stylesheet">
+        <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
+        <script defer src="../js/paginaPedidos.js"></script>
+    </head>
+    <body>
+        <header class="header">
+            <div class="header__nav1">
+                <div class="header__logo">
+                    <a href="../index.html"><img src="../images/lavanderia1.png" alt="Logo Lavandería"></a>
+                </div>
+                <div class="header__links">
+                    <a href="../index.html" class="header__link">INICIO</a>
+                    <a href="404.html" class="header__link">CONTACTO</a>
+                    <a href="pedidos.html" class="header__link" id="cartLink">PEDIDOS</a>
+                    <a href="configuraciones.html" class="header__link">CONFIGURACIONES</a>
+                </div>
+            </div>
+            <div class="header__nav2">
+                <div class="header__menu-desplegable">
+                    <i class="fas fa-bars"></i>
+                    <p>MENU</p>
+                </div>            
+            </div>
+        </header>
+        <nav class="side-menu" id="sideMenu">
+            <ul class="side-menu__top-links">
+                <li><a href="../index.html" class="side-menu__link">INICIO</a></li>
+                <li><a href="404.html" class="side-menu__link">CONTACTO</a></li>
+                <li><a href="configuraciones.html" class="side-menu__link">CONFIGURACIONES</a></li>
+            </ul>
+        </nav>    
+        <main class="main_pedidos">
+            <section class="carrito-container">
+                <h2>Pedido</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Producto</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los productos del carrito se cargarán aquí mediante JavaScript -->
+                    </tbody>
+                </table>
+                <div class="mensaje-carrito-vacio">
+                    <!-- Mensaje para carrito vacío o cualquier otro mensaje relevante -->
+                </div>
+            </section>
+            <div class="datos-cliente">
+                <h3>Datos para la entrega</h3>
+                <form id="formulario-cliente" class="formulario-cliente">
+                    <div class="form-field">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" value="matias" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="email">Email:</label>
+                        <input type="email" value="ejemplo@gmail.com" id="email" name="email" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="number" value="1123456789" id="telefono" name="telefono" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="direccion">Dirección:</label>
+                        <input type="text" value="carlos gardel 432, palermo" id="direccion" name="direccion" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="comentarios">Comentarios</label>
+                        <textarea placeholder="Otros datos sobre la residencia" id="comentarios" name="comentario" required></textarea>
+                    </div>                    
+                </form>
+            </div>
+            
+            <button id="confirmar-pedido" class="btn-confirmar-pedido">Confirmar pedido</button>
+        </main>
+        <footer class="footer">
+            <p>© 2023 Todos los derechos reservados.</p>
+        </footer>
+        <audio id="sonidoConfirmacion" src="../others/check.mp3" preload="auto"></audio>
+    </body>
+</html>
