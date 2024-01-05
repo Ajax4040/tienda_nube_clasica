@@ -1,78 +1,101 @@
-document.addEventListener("DOMContentLoaded", function() {
 
-    cargarProductos();
+cargarProductos();
 
-    //-------------------------------------------------------------------------
-    //Funcion para el menu desplegable
-    const menu = document.getElementById('sideMenu');
-    const menuIcon = document.querySelector('.fas.fa-bars');
-    const menuLinks = menu.querySelectorAll('a');
+//-------------------------------------------------------------------------
+//Funcion para el menu desplegable
+const menu = document.getElementById('sideMenu');
+const menuIcon = document.querySelector('.fas.fa-bars');
+const menuLinks = menu.querySelectorAll('a');
 
-    menuIcon.addEventListener('click', function() {
-        menu.classList.toggle('open');
-    });
-
-    menuLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            menu.classList.remove('open');
-        });
-    });
-
-    // Posiciones de inicio y fin del deslizamiento
-    let startX = 0;
-    let endX = 0;
-
-    // Evento para detectar cuando el usuario comienza a tocar la pantalla
-    menu.addEventListener('touchstart', function(e) {
-        startX = e.touches[0].clientX; // Almacena la posición X inicial del toque
-    }, false);
-
-    // Evento para detectar cuando el usuario deja de tocar la pantalla
-    menu.addEventListener('touchend', function(e) {
-        endX = e.changedTouches[0].clientX; // Almacena la posición X final del toque
-
-        // Verifica si el deslizamiento fue hacia la izquierda y si el menú está abierto
-        if (startX > endX && menu.classList.contains('open')) {
-            menu.classList.remove('open'); // Cierra el menú
-        }
-    }, false);
-
-    //-------------------------------------------------------------------------
-    //Funciones para el formulario de pedidos para la entrega al cliente
-
-    document.getElementById('confirmar-pedido').addEventListener('click', function(event) {
-        console.log("1)A) Se dio click en el boton de confirmar pedido.");
-        event.preventDefault(); // Previene el envío por defecto del formulario
-        const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-        const nombre = document.getElementById('nombre').value;
-        const email = document.getElementById('email').value;
-        const telefono = document.getElementById('telefono').value;
-        const direccion = document.getElementById('direccion').value;
-        const comentarios = document.getElementById('comentarios').value;
-
-        let pedido = validarDatosCliente(carrito, nombre, email, telefono, direccion,comentarios);
-        if (pedido) {
-            pedidoConfirmado(carrito, nombre, email, telefono, direccion,comentarios);
-            // Aquí puedes hacer lo que necesites con los datos
-            // Por ejemplo, enviarlos a un servidor con AJAX
-        }
-    }); 
-    
+menuIcon.addEventListener('click', function() {
+    menu.classList.toggle('open');
 });
 
+menuLinks.forEach(link => {
+    link.addEventListener('click', function() {
+        menu.classList.remove('open');
+    });
+});
+
+// Posiciones de inicio y fin del deslizamiento
+let startX = 0;
+let endX = 0;
+
+// Evento para detectar cuando el usuario comienza a tocar la pantalla
+menu.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX; // Almacena la posición X inicial del toque
+}, false);
+
+// Evento para detectar cuando el usuario deja de tocar la pantalla
+menu.addEventListener('touchend', function(e) {
+    endX = e.changedTouches[0].clientX; // Almacena la posición X final del toque
+
+    // Verifica si el deslizamiento fue hacia la izquierda y si el menú está abierto
+    if (startX > endX && menu.classList.contains('open')) {
+        menu.classList.remove('open'); // Cierra el menú
+    }
+}, false);
+
+//-------------------------------------------------------------------------
+//Funciones para el formulario de pedidos para la entrega al cliente
+
+document.getElementById('confirmar-pedido').addEventListener('click', function(event) {
+    console.log("1)A) Se dio click en el boton de confirmar pedido.");
+    event.preventDefault(); // Previene el envío por defecto del formulario
+
+    let carrito = obtenerDeLocalStorage('carrito') || [];
+    const nombre = document.getElementById('nombre').value;
+    const email = document.getElementById('email').value;
+    const telefono = document.getElementById('telefono').value;
+    const direccion = document.getElementById('direccion').value;
+    const comentarios = document.getElementById('comentarios').value;
+    
+    let totalPedido = 0;
+    console.log(carrito);
+    carrito.forEach((producto) => totalPedido += Number(producto.subTotal));
+    
+    let pedido = validarDatosCliente(carrito, nombre, email, telefono, direccion,comentarios);
+    
+    if (pedido) {
+        pedidoConfirmado(carrito, nombre, email, telefono, direccion,comentarios);
+        console.log("Se envia mensaje por whatsapp.");
+
+        let mensaje = `Hola! Mi nombre es ${nombre}. Estoy realizando un pedido:\n\n`;
+
+        carrito.forEach((producto, indice) => {
+            mensaje += `*${indice + 1})* Descripción: ${producto.descripcion}, Cantidad: ${producto.cantidad}, Precio: $${producto.precio}, Codigo: ${producto.codigo}, *Subtotal: $${producto.subTotal}*\n`;
+        });
+
+        mensaje += `\n*Total del pedido: $${totalPedido.toFixed(2)}*\n\n`;
+
+        mensaje += `\n*Información de contacto:*\n`;
+        mensaje += `*Email:* ${email}\n`;
+        mensaje += `*Teléfono:* ${telefono}\n`;
+        mensaje += `*Dirección:* ${direccion}\n`;
+        mensaje += `*Comentarios:* ${comentarios}`;
+
+        window.open(`https://wa.me/5491144132895?text=${encodeURIComponent(mensaje)}`, '_blank');
+    }
+}); 
+    
 //-------------------------------------------------------------------------
 // Carga los productos del carrito en el DOM en forma de tabla
 
 function cargarProductos() {
     console.log("Se llama a la funcion de cargar productos al DOM");
     const tableBody = document.querySelector("tbody");
-    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    let carrito = obtenerDeLocalStorage('carrito') || [];
 
     if (carrito.length > 0) {
         console.log("Hay productos en el carrito. Se cargan en el DOM en filas los productos.");
         tableBody.innerHTML = "";
         carrito.forEach((producto) => tableBody.innerHTML += retornarFilaHTML(producto));
         botonEliminarProductos();
+        //Agregar el total del pedido en formato flotante
+        let totalPedido = 0;
+        carrito.forEach((producto) => totalPedido += Number(producto.subTotal));
+        tableBody.innerHTML += `<tr><td colspan="4" id="total">Total del pedido: $${totalPedido.toFixed(2)}</td></tr>`;
+
     } else {
         console.log("Se llamo a la funcion de cargar productos y no hay productos en el carrito.");
         tableBody.innerHTML = "";
@@ -84,10 +107,10 @@ function cargarProductos() {
 function retornarFilaHTML(producto) {
     return `<tr>
                 <td>${producto.cantidad}</td>
-                <td>${producto.id}</td>
+                <td>${producto.codigo}</td>
                 <td>${producto.descripcion}</td>
-                <td>$${producto.precio}</td>
-                <td><button id="${producto.id}" class="btnEliminarPedido">Eliminar</button></td>
+                <td>$${producto.subTotal}</td>
+                <td><button id="${producto.codigo}" class="btnEliminarPedido">Eliminar</button></td>
             </tr>`;
 }
 
@@ -105,14 +128,13 @@ function botonEliminarProductos() {
 }
 
 function eliminarProductoDelCarrito(idProducto) {
+    let carrito = obtenerDeLocalStorage('carrito') || [];
+    const idx = carrito.findIndex((producto) => producto.codigo === parseInt(idProducto));
 
-    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-
-    const idx = carrito.findIndex((producto) => producto.id === idProducto);
     console.log("El producto con id " + idProducto + " se encuentra en la posición " + idx + " del carrito.");
     if (idx !== -1) {
         carrito.splice(idx, 1); // Elimina el producto del carrito
-        localStorage.setItem('carrito', JSON.stringify(carrito));
+        guardarEnLocalStorage('carrito', carrito); // Guarda el carrito encriptado en localStorage
         actualizarContadorCarrito(); // Actualiza el contador en localStorage y en la interfaz
         cargarProductos(); // Recarga la tabla para reflejar el producto eliminado
         mensajesAlUsuario('Producto eliminado', 'El producto se eliminó correctamente del pedido.', 'success');
@@ -138,6 +160,22 @@ function mensajesAlUsuario(titulo,texto,icono){
         text: texto,
         icon: icono
       });
+}
+
+function mensajePedidoExitoso(callback) {
+    Swal.fire({
+        title: "Pedido realizado!",
+        text: "Tu pedido se realizó correctamente. Nos pondremos en contacto a la brevedad.",
+        icon: "success",
+        showCancelButton: false,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            callback();
+        }
+    });
 }
 
 function confirmarEliminacion(idProducto, callback) {
@@ -201,23 +239,26 @@ function pedidoConfirmado(carrito, nombre, email, telefono, direccion, comentari
         comentarios: comentarios
     };
 
-    // Aquí puedes hacer lo que necesites con los datos
     console.log({datosCliente});
     carrito = [];
-    console.log({carrito});
-    localStorage.setItem('carrito', JSON.stringify(carrito)); // Establece el carrito a un array vacío
+    guardarEnLocalStorage('carrito', carrito); // Guarda el carrito vacio encriptado en localStorage
     localStorage.setItem('cartCount', 0); // Establece el contador a cero
     console.log("3)A) Se vacio el carrito y se llama a la funcion de cargar productos.");
     cargarProductos();
     confirmarPedidoAudio();
     borrarDatosFormulario();
-    mensajesAlUsuario('Pedido exitoso!','En breve lo contactaremos por wsp.', 'success');
+    mensajePedidoExitoso(volverAlInicio);
+}
+
+function volverAlInicio() {
+    console.log("Se llama a la funcion de volver al inicio.");
+    window.location.href = "../index.html";
 }
 
 function confirmarPedidoAudio() {
     console.log("Se activa audio de confirmacion de pedido.");
     let audio = document.getElementById('sonidoConfirmacion');
-    audio.volume = 0.3; // Ajusta el volumen al 50%
+    audio.volume = 0.3; // Volumen al 50%
     audio.play();
 }
 
@@ -228,4 +269,18 @@ function borrarDatosFormulario() {
     document.getElementById('telefono').value = "";
     document.getElementById('direccion').value = "";
     document.getElementById('comentarios').value = "";
+}
+
+function guardarEnLocalStorage(clave, valor) {
+    const valorEncriptado = CryptoJS.AES.encrypt(JSON.stringify(valor), 'lalavanderia').toString();
+    localStorage.setItem(clave, valorEncriptado);
+}
+
+function obtenerDeLocalStorage(clave) {
+    const valorEncriptado = localStorage.getItem(clave);
+    if (valorEncriptado) {
+        const bytes = CryptoJS.AES.decrypt(valorEncriptado, 'lalavanderia');
+        return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    }
+    return null;
 }
