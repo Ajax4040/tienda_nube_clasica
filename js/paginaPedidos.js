@@ -1,6 +1,8 @@
 
 cargarProductos();
 
+crearFooter();
+
 //-------------------------------------------------------------------------
 //Funcion para el menu desplegable
 const menu = document.getElementById('sideMenu');
@@ -283,4 +285,14 @@ function obtenerDeLocalStorage(clave) {
         return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     }
     return null;
+}
+
+//Funcion crear un parrafo con el año actual en el footer
+function crearFooter() {
+    console.log("Se llama a la funcion de crear el footer.");
+    const añoActual = new Date().getFullYear();
+    const footer = document.querySelector('.footer');
+    const parrafo = document.createElement('p');
+    parrafo.textContent = `Copyright ${añoActual}. Designed by Apx.Jul`;
+    footer.appendChild(parrafo);
 }

@@ -207,4 +207,3 @@ function obtenerDeLocalStorage(clave) {
     }
     return null;
 }
-
