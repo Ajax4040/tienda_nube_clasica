@@ -1,4 +1,3 @@
-
 cargarProductos();
 
 crearFooter();
@@ -45,7 +44,7 @@ document.getElementById('confirmar-pedido').addEventListener('click', function(e
     console.log("1)A) Se dio click en el boton de confirmar pedido.");
     event.preventDefault(); // Previene el envío por defecto del formulario
 
-    let carrito = obtenerDeLocalStorage('carrito') || [];
+    let carrito2 = obtenerDeLocalStorage('carrito2') || [];
     const nombre = document.getElementById('nombre').value;
     const email = document.getElementById('email').value;
     const telefono = document.getElementById('telefono').value;
@@ -53,18 +52,18 @@ document.getElementById('confirmar-pedido').addEventListener('click', function(e
     const comentarios = document.getElementById('comentarios').value;
     
     let totalPedido = 0;
-    console.log(carrito);
-    carrito.forEach((producto) => totalPedido += Number(producto.subTotal));
+    console.log(carrito2);
+    carrito2.forEach((producto) => totalPedido += Number(producto.subTotal));
     
-    let pedido = validarDatosCliente(carrito, nombre, email, telefono, direccion,comentarios);
+    let pedido = validarDatosCliente(carrito2, nombre, email, telefono, direccion,comentarios);
     
     if (pedido) {
-        pedidoConfirmado(carrito, nombre, email, telefono, direccion,comentarios);
+        pedidoConfirmado(carrito2, nombre, email, telefono, direccion,comentarios);
         console.log("Se envia mensaje por whatsapp.");
 
         let mensaje = `Hola! Mi nombre es ${nombre}. Estoy realizando un pedido:\n\n`;
 
-        carrito.forEach((producto, indice) => {
+        carrito2.forEach((producto, indice) => {
             mensaje += `*${indice + 1})* Descripción: ${producto.descripcion}, Cantidad: ${producto.cantidad}, Precio: $${producto.precio}, Codigo: ${producto.codigo}, *Subtotal: $${producto.subTotal}*\n`;
         });
 
@@ -81,25 +80,25 @@ document.getElementById('confirmar-pedido').addEventListener('click', function(e
 }); 
     
 //-------------------------------------------------------------------------
-// Carga los productos del carrito en el DOM en forma de tabla
+// Carga los productos del carrito2 en el DOM en forma de tabla
 
 function cargarProductos() {
     console.log("Se llama a la funcion de cargar productos al DOM");
     const tableBody = document.querySelector("tbody");
-    let carrito = obtenerDeLocalStorage('carrito') || [];
+    let carrito2 = obtenerDeLocalStorage('carrito2') || [];
 
-    if (carrito.length > 0) {
-        console.log("Hay productos en el carrito. Se cargan en el DOM en filas los productos.");
+    if (carrito2.length > 0) {
+        console.log("Hay productos en el carrito2. Se cargan en el DOM en filas los productos.");
         tableBody.innerHTML = "";
-        carrito.forEach((producto) => tableBody.innerHTML += retornarFilaHTML(producto));
+        carrito2.forEach((producto) => tableBody.innerHTML += retornarFilaHTML(producto));
         botonEliminarProductos();
         //Agregar el total del pedido en formato flotante
         let totalPedido = 0;
-        carrito.forEach((producto) => totalPedido += Number(producto.subTotal));
+        carrito2.forEach((producto) => totalPedido += Number(producto.subTotal));
         tableBody.innerHTML += `<tr><td colspan="4" id="total">Total del pedido: $${totalPedido.toFixed(2)}</td></tr>`;
 
     } else {
-        console.log("Se llamo a la funcion de cargar productos y no hay productos en el carrito.");
+        console.log("Se llamo a la funcion de cargar productos y no hay productos en el carrito2.");
         tableBody.innerHTML = "";
         tableBody.innerHTML = '<tr><td colspan="4">No hay productos en el pedido.</td></tr>';
     }
@@ -130,13 +129,13 @@ function botonEliminarProductos() {
 }
 
 function eliminarProductoDelCarrito(idProducto) {
-    let carrito = obtenerDeLocalStorage('carrito') || [];
-    const idx = carrito.findIndex((producto) => producto.codigo === parseInt(idProducto));
+    let carrito2 = obtenerDeLocalStorage('carrito2') || [];
+    const idx = carrito2.findIndex((producto) => producto.codigo === parseInt(idProducto));
 
-    console.log("El producto con id " + idProducto + " se encuentra en la posición " + idx + " del carrito.");
+    console.log("El producto con id " + idProducto + " se encuentra en la posición " + idx + " del carrito2.");
     if (idx !== -1) {
-        carrito.splice(idx, 1); // Elimina el producto del carrito
-        guardarEnLocalStorage('carrito', carrito); // Guarda el carrito encriptado en localStorage
+        carrito2.splice(idx, 1); // Elimina el producto del carrito2
+        guardarEnLocalStorage('carrito2', carrito2); // Guarda el carrito2 encriptado en localStorage
         actualizarContadorCarrito(); // Actualiza el contador en localStorage y en la interfaz
         cargarProductos(); // Recarga la tabla para reflejar el producto eliminado
         mensajesAlUsuario('Producto eliminado', 'El producto se eliminó correctamente del pedido.', 'success');
@@ -196,13 +195,13 @@ function confirmarEliminacion(idProducto, callback) {
     });
 }
 
-function validarDatosCliente(carrito, nombre, email, telefono, direccion, comentarios) {
+function validarDatosCliente(carrito2, nombre, email, telefono, direccion, comentarios) {
     console.log("2)A) Se llama a la funcion de validar datos del cliente.");
     let regexEmail = /\S+@\S+\.\S+/;
     let regexTelefono = /^\d{10}$/;
-    console.log({carrito, nombre, email, telefono, direccion, comentarios});
+    console.log({carrito2, nombre, email, telefono, direccion, comentarios});
 
-    if (carrito.length === 0) {
+    if (carrito2.length === 0) {
         mensajesAlUsuario('Error en el Pedido', 'No hay productos en el pedido.', 'error');
         return;
     }
@@ -231,7 +230,7 @@ function validarDatosCliente(carrito, nombre, email, telefono, direccion, coment
 
 }
 
-function pedidoConfirmado(carrito, nombre, email, telefono, direccion, comentarios) {
+function pedidoConfirmado(carrito2, nombre, email, telefono, direccion, comentarios) {
     // Si todas las validaciones pasan, podrías continuar con el proceso
     let datosCliente = {
         nombre: nombre,
@@ -242,10 +241,10 @@ function pedidoConfirmado(carrito, nombre, email, telefono, direccion, comentari
     };
 
     console.log({datosCliente});
-    carrito = [];
-    guardarEnLocalStorage('carrito', carrito); // Guarda el carrito vacio encriptado en localStorage
+    carrito2 = [];
+    guardarEnLocalStorage('carrito2', carrito2); // Guarda el carrito2 vacio encriptado en localStorage
     localStorage.setItem('cartCount', 0); // Establece el contador a cero
-    console.log("3)A) Se vacio el carrito y se llama a la funcion de cargar productos.");
+    console.log("3)A) Se vacio el carrito2 y se llama a la funcion de cargar productos.");
     cargarProductos();
     confirmarPedidoAudio();
     borrarDatosFormulario();

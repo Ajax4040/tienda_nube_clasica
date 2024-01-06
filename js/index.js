@@ -152,8 +152,8 @@ function mensajeBienvenida() {
 }
 
 function marcarProductosAgregados() {
-    let carrito = obtenerDeLocalStorage('carrito') || [];
-    carrito.forEach(item => {
+    let carrito2 = obtenerDeLocalStorage('carrito2') || [];
+    carrito2.forEach(item => {
         let productoId = item.codigo.toString(); // Asegúrate de que sea una cadena
         console.log(`Buscando producto con ID: ${productoId}`);
         let productoDOM = document.getElementById(productoId);

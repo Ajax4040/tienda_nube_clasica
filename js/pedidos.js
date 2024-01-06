@@ -1,4 +1,4 @@
-// Cargar el contador del carrito desde localStorage
+// Cargar el contador del carrito2 desde localStorage
 inicializarContadorCarrito();
 
 // Agrega la clase 'visible' a todos los productos cuando la página se carga
@@ -50,14 +50,14 @@ mainElement.addEventListener('click', function(event) {
 
         cantidadContainer.style.display = 'none'; // Oculta el contenedor de cantidad
         input.value = 0; // Resetea el input a 0
-        // Lógica para manejar el clic en el botón de agregar al carrito
+        // Lógica para manejar el clic en el botón de agregar al carrito2
     }
 });
 
 function manejarBotonAgregarAlPedido(button) {
     const cantidadContainer = button.nextElementSibling;
     if (button.classList.contains('product__btn--added')) {
-        // Lógica para eliminar producto del carrito
+        // Lógica para eliminar producto del carrito2
         elminarProductoDelCarrito(button);
     } else {
         // Mostrar/ocultar el contenedor de cantidad
@@ -96,7 +96,7 @@ function agregarAlPedido(button) {
                 if (producto) {
                     console.log("Producto encontrado: ", producto);
                     // Llamar a cargarPedidoLocalStorage con los datos del producto
-                    let pedidoActual = obtenerDeLocalStorage('carrito') || [];
+                    let pedidoActual = obtenerDeLocalStorage('carrito2') || [];
                     pedidoActual.push({
                         codigo: producto.codigo, 
                         descripcion: producto.descripcion, 
@@ -105,7 +105,7 @@ function agregarAlPedido(button) {
                         subTotal: producto.precio * cantidadInput
                     });
                     console.log("Pedido actual como se guardo en localStorage: ", pedidoActual);
-                    guardarEnLocalStorage('carrito', pedidoActual);
+                    guardarEnLocalStorage('carrito2', pedidoActual);
                     productoEncontrado = true;
                     break; // Salir del bucle una vez encontrado el producto
                 }
@@ -155,16 +155,16 @@ function elminarProductoDelCarrito(button) {
 }
 
 function eliminarPedidoLocalStorage(codigo) {
-    let carrito = obtenerDeLocalStorage('carrito') || [];
-    let productoEnCarrito = carrito.find(producto => producto.codigo === parseInt(codigo));
+    let carrito2 = obtenerDeLocalStorage('carrito2') || [];
+    let productoEnCarrito = carrito2.find(producto => producto.codigo === parseInt(codigo));
 
     if (productoEnCarrito) {
         let confirmacion = confirm("¿Desea eliminar el producto del pedido?");
 
         if (confirmacion) {
-            carrito = carrito.filter(producto => producto.codigo !== parseInt(codigo));
-            console.log(carrito);
-            guardarEnLocalStorage('carrito', carrito);
+            carrito2 = carrito2.filter(producto => producto.codigo !== parseInt(codigo));
+            console.log(carrito2);
+            guardarEnLocalStorage('carrito2', carrito2);
             console.log("En eliminarPedidoLocalStorage se retorna verdadero");
             return true;
         } else {
@@ -190,7 +190,7 @@ function inicializarContadorCarrito() {
 function actualizarContadorCarrito(nuevoContador) {
     cartCount = nuevoContador;
     localStorage.setItem('cartCount', cartCount);
-    cartLink.textContent = `PEDIDOS (${cartCount})`;
+    cartLink.textContent = `PEDIDO (${cartCount})`;
 }
 
 
@@ -207,3 +207,4 @@ function obtenerDeLocalStorage(clave) {
     }
     return null;
 }
+
